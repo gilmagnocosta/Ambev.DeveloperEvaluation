@@ -1,11 +1,25 @@
-﻿using Ambev.DeveloperEvaluation.Domain.Entities;
+﻿using Ambev.DeveloperEvaluation.Domain.Enums;
+using Ambev.DeveloperEvaluation.Domain.Validation;
 using FluentValidation;
 
-namespace Ambev.DeveloperEvaluation.Domain.Validation;
+namespace Ambev.DeveloperEvaluation.Application.Products.CreateProduct;
 
-public class ProductValidator : AbstractValidator<Product>
+/// <summary>
+/// Validator for CreateProductCommand that defines validation rules for product creation command.
+/// </summary>
+public class CreateProductCommandValidator : AbstractValidator<CreateProductCommand>
 {
-    public ProductValidator()
+    /// <summary>
+    /// Initializes a new instance of the CreateProductCommandValidator with defined validation rules.
+    /// </summary>
+    /// <remarks>
+    /// Validation rules include:
+    /// - Title: Required, must be between 3 and 50 characters
+    /// - Description: Required, must be between 3 and 200 characters
+    /// - Category: Required, must be between 3 and 20 characters
+    /// - Image: Required, must be between 3 and 100 characters
+    /// </remarks>
+    public CreateProductCommandValidator()
     {
         RuleFor(product => product.Title)
             .NotEmpty()
@@ -22,7 +36,7 @@ public class ProductValidator : AbstractValidator<Product>
             .MinimumLength(3).WithMessage("{PropertyName} must be at least 3 characters long.")
             .MaximumLength(20).WithMessage("{PropertyName} cannot be longer than 20 characters.");
 
-        RuleFor(user => user.Image)
+        RuleFor(product => product.Image)
             .NotEmpty()
             .MinimumLength(3).WithMessage("{PropertyName} must be at least 3 characters long.")
             .MaximumLength(100).WithMessage("{PropertyName} cannot be longer than 100 characters.");

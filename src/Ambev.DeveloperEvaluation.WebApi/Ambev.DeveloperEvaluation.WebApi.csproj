@@ -11,6 +11,17 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Features\Products\ListUsers\**" />
+    <Compile Remove="Features\Products\UpdateUser\**" />
+    <Content Remove="Features\Products\ListUsers\**" />
+    <Content Remove="Features\Products\UpdateUser\**" />
+    <EmbeddedResource Remove="Features\Products\ListUsers\**" />
+    <EmbeddedResource Remove="Features\Products\UpdateUser\**" />
+    <None Remove="Features\Products\ListUsers\**" />
+    <None Remove="Features\Products\UpdateUser\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="MediatR" Version="12.4.1" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.10">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>

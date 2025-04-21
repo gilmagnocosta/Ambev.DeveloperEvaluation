@@ -15,7 +15,7 @@ namespace Ambev.DeveloperEvaluation.Unit.Application;
 /// </summary>
 public class CreateUserHandlerTests
 {
-    private readonly IUserRepository _userRepository;
+    private readonly IProductRepository _userRepository;
     private readonly IMapper _mapper;
     private readonly IPasswordHasher _passwordHasher;
     private readonly CreateUserHandler _handler;
@@ -26,7 +26,7 @@ public class CreateUserHandlerTests
     /// </summary>
     public CreateUserHandlerTests()
     {
-        _userRepository = Substitute.For<IUserRepository>();
+        _userRepository = Substitute.For<IProductRepository>();
         _mapper = Substitute.For<IMapper>();
         _passwordHasher = Substitute.For<IPasswordHasher>();
         _handler = new CreateUserHandler(_userRepository, _mapper, _passwordHasher);
