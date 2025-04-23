@@ -45,11 +45,11 @@ public class ListProductsHandler : IRequestHandler<ListProductsQuery, ResultAsLi
         if (!validationResult.IsValid)
             throw new ValidationException(validationResult.Errors);
 
-        var orderParams = !string.IsNullOrEmpty(request._order) ? request._order.Split(' ') : [STANDARD_COLUMN_ORDER, STANDARD_DIRECTION_ORDER];
+        var orderParams = !string.IsNullOrEmpty(request.Order) ? request.Order.Split(' ') : [STANDARD_COLUMN_ORDER, STANDARD_DIRECTION_ORDER];
 
-        var (items, count) = await _productRepository.GetAllAsync(request._page, request._size, orderParams[0], orderParams[1] == "asc" ? true : false, cancellationToken);
+        var (items, count) = await _productRepository.GetAllAsync(request.Page, request.Size, orderParams[0], orderParams[1] == "asc" ? true : false, cancellationToken);
         
         return _mapper.Map<ResultAsList<ListProductsResult>>(
-            new ResultAsList<Product>(items, request._size, request._page));
+            new ResultAsList<Product>(items, request.Size, request.Page));
     }
 }

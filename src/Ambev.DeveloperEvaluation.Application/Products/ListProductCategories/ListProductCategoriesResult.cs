@@ -10,5 +10,5 @@ public class ListProductCategoriesResult
     /// <summary>
     /// Gets or sets the list of the product categories.
     /// </summary>
-    public List<string> Categories { get; set; }
+    public string Category { get; set; }
 }

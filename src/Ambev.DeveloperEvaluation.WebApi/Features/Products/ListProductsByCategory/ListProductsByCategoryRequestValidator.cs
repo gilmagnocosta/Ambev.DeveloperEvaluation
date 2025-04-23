@@ -5,12 +5,12 @@ namespace Ambev.DeveloperEvaluation.WebApi.Features.Products.ListProductsByCateg
 /// <summary>
 /// Validator for ListProductsByCategoryCommand
 /// </summary>
-public class ListProductsByCategoryValidator : AbstractValidator<ListProductsByCategoryQuery>
+public class ListProductsByCategoryRequestValidator : AbstractValidator<ListProductsByCategoryRequest>
 {
     /// <summary>
     /// Initializes validation rules for ListProductsByCategoryCommand
     /// </summary>
-    public ListProductsByCategoryValidator()
+    public ListProductsByCategoryRequestValidator()
     {
         RuleFor(product => product.Category)
             .NotEmpty()

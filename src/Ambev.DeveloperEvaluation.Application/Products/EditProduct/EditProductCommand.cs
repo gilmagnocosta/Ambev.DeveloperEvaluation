@@ -5,10 +5,10 @@ using MediatR;
 namespace Ambev.DeveloperEvaluation.Application.Products.EditProduct;
 
 /// <summary>
-/// Command for creating a new product.
+/// Command for update a product
 /// </summary>
 /// <remarks>
-/// This command is used to capture the required data for creating a product, 
+/// This command is used to capture the required data for update a product, 
 /// including title, description, category, image, rating. 
 /// It implements <see cref="IRequest{TResponse}"/> to initiate the request 
 /// that returns a <see cref="EditProductResult"/>.

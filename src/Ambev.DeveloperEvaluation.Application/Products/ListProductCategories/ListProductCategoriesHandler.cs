@@ -3,19 +3,16 @@ using MediatR;
 using FluentValidation;
 using Ambev.DeveloperEvaluation.Domain.Repositories;
 using Ambev.DeveloperEvaluation.Application.Shared;
-using Ambev.DeveloperEvaluation.Domain.Entities;
 
 namespace Ambev.DeveloperEvaluation.Application.Products.ListProductCategories;
 
 /// <summary>
 /// Handler for processing ListProductCategoriesCommand requests
 /// </summary>
-public class ListProductCategoriesHandler : IRequestHandler<ListProductCategoriesQuery, ResultAsList<ListProductCategoriesResult>>
+public class ListProductCategoriesHandler : IRequestHandler<ListProductCategoriesQuery, List<string>>
 {
     private readonly IProductRepository _productRepository;
     private readonly IMapper _mapper;
-    private const string STANDARD_COLUMN_ORDER = "title";
-    private const string STANDARD_DIRECTION_ORDER = "asc";
 
     /// <summary>
     /// Initializes a new instance of ListProductCategoriesHandler
@@ -37,7 +34,7 @@ public class ListProductCategoriesHandler : IRequestHandler<ListProductCategorie
     /// <param name="request">The ListProductCategories command</param>
     /// <param name="cancellationToken">Cancellation token</param>
     /// <returns>The product categories list if found</returns>
-    public async Task<ResultAsList<ListProductCategoriesResult>> Handle(ListProductCategoriesQuery request, CancellationToken cancellationToken)
+    public async Task<List<string>> Handle(ListProductCategoriesQuery request, CancellationToken cancellationToken)
     {
         var validator = new ListProductCategoriesValidator();
         var validationResult = await validator.ValidateAsync(request, cancellationToken);
@@ -46,8 +43,7 @@ public class ListProductCategoriesHandler : IRequestHandler<ListProductCategorie
             throw new ValidationException(validationResult.Errors);
 
         List<string> items = await _productRepository.GetAllProductCategoriesAsync(cancellationToken);
-        
-        return _mapper.Map<ResultAsList<ListProductCategoriesResult>>(
-            new ResultAsList<string>(items));
+
+        return items;
     }
 }

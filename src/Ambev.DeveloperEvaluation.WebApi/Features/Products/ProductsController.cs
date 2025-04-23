@@ -10,8 +10,12 @@ using Ambev.DeveloperEvaluation.Application.Products.GetProduct;
 using Ambev.DeveloperEvaluation.Application.Products.DeleteProduct;
 using Ambev.DeveloperEvaluation.WebApi.Features.Products.EditProduct;
 using Ambev.DeveloperEvaluation.Application.Products.EditProduct;
-using Ambev.DeveloperEvaluation.WebApi.Features.Products.ListProductCategories;
 using Ambev.DeveloperEvaluation.WebApi.Features.Products.ListProductsByCategory;
+using Ambev.DeveloperEvaluation.Application.Products.ListProductCategories;
+using Ambev.DeveloperEvaluation.WebApi.Features.Products.ListProductCategories;
+using Microsoft.AspNetCore.Http.HttpResults;
+using Ambev.DeveloperEvaluation.Application.Products.ListProductsByCategory;
+using Microsoft.AspNetCore.Http.Features;
 
 namespace Ambev.DeveloperEvaluation.WebApi.Features.Products;
 
@@ -87,12 +91,7 @@ public class ProductsController : BaseController
         var command = _mapper.Map<EditProductCommand>(request);
         var response = await _mediator.Send(command, cancellationToken);
 
-        return Ok(new ApiResponseWithData<EditProductResponse>
-        {
-            Success = true,
-            Message = "Product updated successfully",
-            Data = _mapper.Map<EditProductResponse>(response)
-        });
+        return SimpleOk(_mapper.Map<EditProductResponse>(response));
     }
 
     /// <summary>
@@ -114,15 +113,10 @@ public class ProductsController : BaseController
         if (!validationResult.IsValid)
             return BadRequest(validationResult.Errors);
 
-        var command = _mapper.Map<GetProductCommand>(request.Id);
+        var command = _mapper.Map<GetProductQuery>(request.Id);
         var response = await _mediator.Send(command, cancellationToken);
 
-        return Ok(new ApiResponseWithData<GetProductResponse>
-        {
-            Success = true,
-            Message = "Product retrieved successfully",
-            Data = _mapper.Map<GetProductResponse>(response)
-        });
+        return SimpleOk(_mapper.Map<GetProductResponse>(response));
     }
 
     /// <summary>
@@ -131,27 +125,21 @@ public class ProductsController : BaseController
     /// <param name="cancellationToken">Cancellation token</param>
     /// <returns>The product categories</returns>
     [HttpGet("categories")]
-    [ProducesResponseType(typeof(ApiResponseWithData<GetProductResponse>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(List<string>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status404NotFound)]
-    public async Task<IActionResult> GetProductCategories([FromRoute] Guid id, CancellationToken cancellationToken)
+    public async Task<IActionResult> GetProductCategories(CancellationToken cancellationToken)
     {
-        var request = new GetProductRequest { Id = id };
-        var validator = new GetProductRequestValidator();
+        var request = new ListProductCategoriesRequest();
+        var validator = new ListProductCategoriesRequestValidator();
         var validationResult = await validator.ValidateAsync(request, cancellationToken);
 
         if (!validationResult.IsValid)
             return BadRequest(validationResult.Errors);
 
-        var command = _mapper.Map<ListProductCategoriesQuery>(request.Id);
+        var command = _mapper.Map<ListProductCategoriesQuery>(request);
         var response = await _mediator.Send(command, cancellationToken);
-
-        return Ok(new ApiResponseWithData<ListProductCategoriesResult>
-        {
-            Success = true,
-            Message = "Product retrieved successfully",
-            Data = _mapper.Map<ListProductCategoriesResult>(response)
-        });
+        return SimpleOk(response);
     }
 
     /// <summary>
@@ -160,27 +148,27 @@ public class ProductsController : BaseController
     /// <param name="cancellationToken">Cancellation token</param>
     /// <returns>The product categories</returns>
     [HttpGet("category/{category}")]
-    [ProducesResponseType(typeof(ApiResponseWithData<GetProductResponse>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ApiResponseWithData<ListProductsByCategoryResponse>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status404NotFound)]
-    public async Task<IActionResult> GetProductsByCategory([FromRoute] string category, CancellationToken cancellationToken)
+    public async Task<IActionResult> GetProductsByCategory([FromRoute] string category, [FromQuery] int _page, [FromQuery] int _size, [FromQuery] string _order, CancellationToken cancellationToken)
     {
-        var request = new ListProductsByCategoryQuery { Category = category };
-        var validator = new ListProductsByCategoryValidator();
+        var request = new ListProductsByCategoryRequest { Category = category, Order = _order, Page = _page, Size = _size };
+        var validator = new ListProductsByCategoryRequestValidator();
         var validationResult = await validator.ValidateAsync(request, cancellationToken);
 
         if (!validationResult.IsValid)
             return BadRequest(validationResult.Errors);
 
-        var command = _mapper.Map<ListProductsByCategoryQuery>(request.Category);
+        var command = _mapper.Map<ListProductsByCategoryQuery>(request);
         var response = await _mediator.Send(command, cancellationToken);
 
-        return Ok(new ApiResponseWithData<ListProductsByCategoryResult>
-        {
-            Success = true,
-            Message = "Product retrieved successfully",
-            Data = _mapper.Map<ListProductsByCategoryResult>(response)
-        });
+        return OkPaginated(new PaginatedList<GetProductResponse>(
+            _mapper.Map<List<GetProductResponse>>(response.Items),
+            response.TotalItems,
+            request.Size,
+            request.Page));
+
     }
 
     /// <summary>

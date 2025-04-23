@@ -4,7 +4,7 @@ using MediatR;
 
 namespace Ambev.DeveloperEvaluation.WebApi.Features.Products.ListProducts;
 
-public class ListProductsQuery
+public class ListProductsRequest
 {
 
 }

@@ -15,6 +15,12 @@ public class DefaultContext : DbContext
     {
     }
 
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+    {
+        optionsBuilder.UseLazyLoadingProxies();
+        //optionsBuilder.EnableSensitiveDataLogging();
+    }
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
@@ -35,7 +41,7 @@ public class YourDbContextFactory : IDesignTimeDbContextFactory<DefaultContext>
 
         builder.UseNpgsql(
                connectionString,
-               b => b.MigrationsAssembly("Ambev.DeveloperEvaluation.WebApi")
+               b => b.MigrationsAssembly("Ambev.DeveloperEvaluation.ORM")
         );
 
         return new DefaultContext(builder.Options);

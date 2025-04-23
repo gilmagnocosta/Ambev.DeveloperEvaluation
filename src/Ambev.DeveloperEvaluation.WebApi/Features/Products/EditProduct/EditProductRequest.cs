@@ -1,15 +1,19 @@
 ﻿using Ambev.DeveloperEvaluation.Application.Products.Shared.Models;
-using Ambev.DeveloperEvaluation.Domain.Enums;
 
 namespace Ambev.DeveloperEvaluation.WebApi.Features.Products.EditProduct;
 
 /// <summary>
-/// Represents a request to create a new product in the system.
+/// Represents a request to update a product in the system.
 /// </summary>
 public class EditProductRequest
 {
     /// <summary>
-    /// Gets or sets the title of the product to be created.
+    /// Gets or sets the title of the product to be updated
+    /// </summary>
+    public Guid Id { get; set; }
+
+    /// <summary>
+    /// Gets or sets the title of the product to be updated
     /// </summary>
     public string Title { get; set; } = string.Empty;
 

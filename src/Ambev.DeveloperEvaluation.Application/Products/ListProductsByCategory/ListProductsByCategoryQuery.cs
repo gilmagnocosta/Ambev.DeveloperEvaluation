@@ -4,7 +4,7 @@ using MediatR;
 
 namespace Ambev.DeveloperEvaluation.Application.Products.ListProductsByCategory;
 
-public class ListProductsByCategoryQuery : RequestListBase, IRequest<ResultAsList<ListProductsByCategoryResult>>
+public class ListProductsByCategoryQuery : QueryListBase, IRequest<ListProductsByCategoryResult>
 {
     public string Category { get; set; } = string.Empty;
 }

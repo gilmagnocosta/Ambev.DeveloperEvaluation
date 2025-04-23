@@ -4,15 +4,15 @@ using Ambev.DeveloperEvaluation.Domain.Entities;
 namespace Ambev.DeveloperEvaluation.Application.Products.GetProduct;
 
 /// <summary>
-/// Profile for mapping between User entity and GetUserResponse
+/// Profile for mapping between Product entity and GetProductResponse
 /// </summary>
 public class GetProductProfile : Profile
 {
     /// <summary>
-    /// Initializes the mappings for GetUser operation
+    /// Initializes the mappings for GetProduct operation
     /// </summary>
     public GetProductProfile()
     {
-        CreateMap<User, GetProductResult>();
+        CreateMap<Product, GetProductResult>();
     }
 }

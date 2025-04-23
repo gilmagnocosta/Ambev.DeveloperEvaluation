@@ -119,13 +119,13 @@ public class ProductRepository : IProductRepository
     {
         var items = await _context.Products
             .Where(x => x.Category == category)
-            .Skip(size * page)
+            .Skip(size * (page - 1))
             .Take(size)
             .ToListAsync(cancellationToken);
 
         items = items.OrderBy(orderColumn, ascending)?.ToList();
 
-        var itemsCount = await _context.Products.CountAsync(cancellationToken);
+        var itemsCount = items?.Count() ?? 0; // _context.Products.CountAsync(cancellationToken);
 
         return (items, itemsCount);
     }

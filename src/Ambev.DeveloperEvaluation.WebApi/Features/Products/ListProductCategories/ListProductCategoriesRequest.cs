@@ -1,6 +1,6 @@
 ﻿namespace Ambev.DeveloperEvaluation.WebApi.Features.Products.ListProductCategories;
 
-public class ListProductCategoriesQuery
+public class ListProductCategoriesRequest
 {
 
 }

@@ -1,5 +1,8 @@
 using AutoMapper;
 using Ambev.DeveloperEvaluation.Domain.Entities;
+using Ambev.DeveloperEvaluation.Application.Products.GetProduct;
+using Ambev.DeveloperEvaluation.WebApi.Features.Products.GetProduct;
+using Ambev.DeveloperEvaluation.Application.Products.ListProducts;
 
 namespace Ambev.DeveloperEvaluation.WebApi.Features.Products.ListProducts;
 
@@ -13,7 +16,6 @@ public class ListProductsProfile : Profile
     /// </summary>
     public ListProductsProfile()
     {
-        CreateMap<Guid, Application.Products.ListProducts.ListProductsQuery>()
-            .ConstructUsing(id => new Application.Products.ListProducts.ListProductsQuery());
+        CreateMap<ListProductsRequest, ListProductsQuery>();
     }
 }

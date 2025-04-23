@@ -5,7 +5,7 @@ namespace Ambev.DeveloperEvaluation.Application.Products.GetProduct;
 /// <summary>
 /// Validator for GetProductCommand
 /// </summary>
-public class GetProductValidator : AbstractValidator<GetProductCommand>
+public class GetProductValidator : AbstractValidator<GetProductQuery>
 {
     /// <summary>
     /// Initializes validation rules for GetProductCommand

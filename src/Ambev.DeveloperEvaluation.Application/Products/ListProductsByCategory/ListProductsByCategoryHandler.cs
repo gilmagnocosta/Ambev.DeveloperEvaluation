@@ -4,13 +4,14 @@ using FluentValidation;
 using Ambev.DeveloperEvaluation.Domain.Repositories;
 using Ambev.DeveloperEvaluation.Application.Shared;
 using Ambev.DeveloperEvaluation.Domain.Entities;
+using Ambev.DeveloperEvaluation.Application.Products.GetProduct;
 
 namespace Ambev.DeveloperEvaluation.Application.Products.ListProductsByCategory;
 
 /// <summary>
-/// Handler for processing ListProductsCommand requests
+/// Handler for processing ListProductsByCategory requests
 /// </summary>
-public class ListProductsByCategoryHandler : IRequestHandler<ListProductsByCategoryQuery, ResultAsList<ListProductsByCategoryResult>>
+public class ListProductsByCategoryHandler : IRequestHandler<ListProductsByCategoryQuery, ListProductsByCategoryResult>
 {
     private readonly IProductRepository _productRepository;
     private readonly IMapper _mapper;
@@ -37,7 +38,7 @@ public class ListProductsByCategoryHandler : IRequestHandler<ListProductsByCateg
     /// <param name="request">The ListProducts command</param>
     /// <param name="cancellationToken">Cancellation token</param>
     /// <returns>The product list if found</returns>
-    public async Task<ResultAsList<ListProductsByCategoryResult>> Handle(ListProductsByCategoryQuery request, CancellationToken cancellationToken)
+    public async Task<ListProductsByCategoryResult> Handle(ListProductsByCategoryQuery request, CancellationToken cancellationToken)
     {
         var validator = new ListProductsByCategoryValidator();
         var validationResult = await validator.ValidateAsync(request, cancellationToken);
@@ -45,11 +46,14 @@ public class ListProductsByCategoryHandler : IRequestHandler<ListProductsByCateg
         if (!validationResult.IsValid)
             throw new ValidationException(validationResult.Errors);
 
-        var orderParams = !string.IsNullOrEmpty(request._order) ? request._order.Split(' ') : [STANDARD_COLUMN_ORDER, STANDARD_DIRECTION_ORDER];
+        var orderParams = !string.IsNullOrEmpty(request.Order) ? request.Order.Split(' ') : [STANDARD_COLUMN_ORDER, STANDARD_DIRECTION_ORDER];
 
-        var (items, count) = await _productRepository.GetAllByCategoryAsync(request.Category, request._page, request._size, orderParams[0], orderParams[1] == "asc" ? true : false, cancellationToken);
-        
-        return _mapper.Map<ResultAsList<ListProductsByCategoryResult>>(
-            new ResultAsList<Product>(items, request._size, request._page));
+        var (items, count) = await _productRepository.GetAllByCategoryAsync(request.Category, request.Page, request.Size, orderParams[0], orderParams[1] == "asc" ? true : false, cancellationToken);
+
+        return new ListProductsByCategoryResult
+        {
+            Items = _mapper.Map<List<GetProductResult>>(items),
+            TotalItems = count
+        };
     }
 }

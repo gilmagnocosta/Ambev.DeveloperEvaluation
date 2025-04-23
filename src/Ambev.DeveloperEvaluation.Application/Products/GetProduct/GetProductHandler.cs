@@ -8,7 +8,7 @@ namespace Ambev.DeveloperEvaluation.Application.Products.GetProduct;
 /// <summary>
 /// Handler for processing GetUserCommand requests
 /// </summary>
-public class GetProductHandler : IRequestHandler<GetProductCommand, GetProductResult>
+public class GetProductHandler : IRequestHandler<GetProductQuery, GetProductResult>
 {
     private readonly IProductRepository _userRepository;
     private readonly IMapper _mapper;
@@ -33,7 +33,7 @@ public class GetProductHandler : IRequestHandler<GetProductCommand, GetProductRe
     /// <param name="request">The GetUser command</param>
     /// <param name="cancellationToken">Cancellation token</param>
     /// <returns>The user details if found</returns>
-    public async Task<GetProductResult> Handle(GetProductCommand request, CancellationToken cancellationToken)
+    public async Task<GetProductResult> Handle(GetProductQuery request, CancellationToken cancellationToken)
     {
         var validator = new GetProductValidator();
         var validationResult = await validator.ValidateAsync(request, cancellationToken);
