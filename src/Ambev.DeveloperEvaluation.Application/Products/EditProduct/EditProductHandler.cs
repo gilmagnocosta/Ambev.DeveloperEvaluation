@@ -41,11 +41,6 @@ public class EditProductHandler : IRequestHandler<EditProductCommand, EditProduc
             throw new ValidationException(validationResult.Errors);
 
 
-        // Verify if it is already exists with the same title
-        var existingProduct = await _productRepository.GetByTitleAsync(command.Title, cancellationToken);
-        if (existingProduct != null)
-            throw new InvalidOperationException($"Product with title {command.Title} already exists");
-
         // Get Current
         var entity = await _productRepository.GetByIdAsync(command.Id, cancellationToken);
         if (entity == null)
@@ -57,6 +52,26 @@ public class EditProductHandler : IRequestHandler<EditProductCommand, EditProduc
 
             throw new ValidationException(validationResult.Errors);
         }
+
+        // Verify if it is already exists with the same title
+        var existingProduct = await _productRepository.GetByTitleAsync(command.Title, cancellationToken);
+        if (existingProduct != null && existingProduct.Id != entity.Id)
+        {
+            validationResult.Errors.Add(new FluentValidation.Results.ValidationFailure
+            {
+                ErrorMessage = $"Product with title '{command.Title}' already exists"
+            });
+
+            throw new ValidationException(validationResult.Errors);
+        }
+
+        entity.Title = command.Title;
+        entity.Description = command.Description;
+        entity.Category = command.Category;
+        entity.Image = command.Image;
+        entity.Rating.Rate = command.Rating.Rate;
+        entity.Rating.Count = command.Rating.Count;
+        entity.UpdatedAt = DateTime.UtcNow;
 
         await _productRepository.UpdateAsync(entity, cancellationToken);
         var result = _mapper.Map<EditProductResult>(entity);

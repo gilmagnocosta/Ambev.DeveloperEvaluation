@@ -23,6 +23,16 @@ public static class EntityHelper
             return entities;
 
         var propertyInfo = entities?.First()?.GetType().GetProperty(propertyName, BindingFlags.IgnoreCase | BindingFlags.Public | BindingFlags.Instance);
-        return entities.OrderBy(e => propertyInfo.GetValue(e, null));
+        
+        if (ascending)
+        {
+            entities = entities.OrderBy(e => propertyInfo.GetValue(e, null));
+        }
+        else
+        {
+            entities = entities.OrderByDescending(e => propertyInfo.GetValue(e, null));
+        }
+
+        return entities;
     }
 }

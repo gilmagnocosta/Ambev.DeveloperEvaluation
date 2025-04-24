@@ -14,5 +14,6 @@ public class ListProductsByCategoryProfile : Profile
     public ListProductsByCategoryProfile()
     {
         CreateMap<ListProductsByCategoryRequest, ListProductsByCategoryQuery>();
+        CreateMap<ListProductsByCategoryResult, ListProductsByCategoryResponse>();
     }
 }

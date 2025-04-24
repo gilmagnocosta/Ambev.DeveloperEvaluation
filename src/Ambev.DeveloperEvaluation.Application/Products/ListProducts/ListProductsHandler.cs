@@ -4,13 +4,14 @@ using FluentValidation;
 using Ambev.DeveloperEvaluation.Domain.Repositories;
 using Ambev.DeveloperEvaluation.Application.Shared;
 using Ambev.DeveloperEvaluation.Domain.Entities;
+using Ambev.DeveloperEvaluation.Application.Products.GetProduct;
 
 namespace Ambev.DeveloperEvaluation.Application.Products.ListProducts;
 
 /// <summary>
 /// Handler for processing ListProductsCommand requests
 /// </summary>
-public class ListProductsHandler : IRequestHandler<ListProductsQuery, ResultAsList<ListProductsResult>>
+public class ListProductsHandler : IRequestHandler<ListProductsQuery, ListProductsResult>
 {
     private readonly IProductRepository _productRepository;
     private readonly IMapper _mapper;
@@ -37,7 +38,7 @@ public class ListProductsHandler : IRequestHandler<ListProductsQuery, ResultAsLi
     /// <param name="request">The ListProducts command</param>
     /// <param name="cancellationToken">Cancellation token</param>
     /// <returns>The product list if found</returns>
-    public async Task<ResultAsList<ListProductsResult>> Handle(ListProductsQuery request, CancellationToken cancellationToken)
+    public async Task<ListProductsResult> Handle(ListProductsQuery request, CancellationToken cancellationToken)
     {
         var validator = new ListProductsValidator();
         var validationResult = await validator.ValidateAsync(request, cancellationToken);
@@ -47,9 +48,15 @@ public class ListProductsHandler : IRequestHandler<ListProductsQuery, ResultAsLi
 
         var orderParams = !string.IsNullOrEmpty(request.Order) ? request.Order.Split(' ') : [STANDARD_COLUMN_ORDER, STANDARD_DIRECTION_ORDER];
 
-        var (items, count) = await _productRepository.GetAllAsync(request.Page, request.Size, orderParams[0], orderParams[1] == "asc" ? true : false, cancellationToken);
-        
-        return _mapper.Map<ResultAsList<ListProductsResult>>(
-            new ResultAsList<Product>(items, request.Size, request.Page));
+        var (items, count) = await _productRepository.GetAllAsync(
+            request.Page, 
+            request.Size, 
+            orderParams[0], 
+            orderParams[1] == "asc" ? true : false, 
+            cancellationToken);
+
+        var resultItems = _mapper.Map<List<GetProductResult>>(items);
+
+        return new ListProductsResult(resultItems, request.Page, request.Size, count);
     }
 }

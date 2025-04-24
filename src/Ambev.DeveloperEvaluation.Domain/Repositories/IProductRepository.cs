@@ -47,12 +47,15 @@ public interface IProductRepository
     /// <param name="cancellationToken">Cancellation token</param>
     /// <returns>True if the product was deleted, false if not found</returns>
     Task<bool> DeleteAsync(Guid id, CancellationToken cancellationToken = default);
-    
+
     /// <summary>
     /// Get all products from the repository
     /// </summary>
     /// <param name="page"></param>
     /// <param name="size"></param>
+    /// <param name="orderColumn"></param>
+    /// <param name="ascending"></param>
+    /// <param name="cancellationToken"></param>
     /// <returns>The product list if found and the count of items returned</returns>
     Task<(List<Product>?, int)> GetAllAsync(int page, int size, string orderColumn, bool ascending, CancellationToken cancellationToken = default);
 

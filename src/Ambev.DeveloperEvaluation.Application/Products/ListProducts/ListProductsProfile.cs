@@ -13,6 +13,6 @@ public class ListProductsProfile : Profile
     /// </summary>
     public ListProductsProfile()
     {
-        CreateMap<Product, ListProductsResult>();
+        
     }
 }

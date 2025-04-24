@@ -1,13 +1,12 @@
-using Ambev.DeveloperEvaluation.Application.Products.Shared.Models;
 using Ambev.DeveloperEvaluation.WebApi.Features.Products.GetProduct;
 using Ambev.DeveloperEvaluation.WebApi.Features.Shared.Base;
 
-namespace Ambev.DeveloperEvaluation.WebApi.Features.Products.ListProductsByCategory;
+namespace Ambev.DeveloperEvaluation.WebApi.Features.Products.ListProducts;
 
 /// <summary>
-/// Response model for ListProductsByCategory operation
+/// Response model for ListProducts operation
 /// </summary>
-public class ListProductsByCategoryResponse : ResponseListBase
+public class ListProductsResponse : ResponseListBase
 {
     /// <summary>
     /// Gets or sets the items returned

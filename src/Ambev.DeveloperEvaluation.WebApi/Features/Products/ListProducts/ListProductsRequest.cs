@@ -1,10 +1,8 @@
-﻿using Ambev.DeveloperEvaluation.Application.Shared;
-using Ambev.DeveloperEvaluation.Application.Shared.Base;
-using MediatR;
+﻿using Ambev.DeveloperEvaluation.WebApi.Features.Shared.Base;
 
 namespace Ambev.DeveloperEvaluation.WebApi.Features.Products.ListProducts;
 
-public class ListProductsRequest
+public class ListProductsRequest : RequestListBase
 {
 
 }

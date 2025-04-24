@@ -44,7 +44,7 @@ public class EditProductCommand : IRequest<EditProductResult>
     /// <summary>
     /// Gets or sets the rating of the product.
     /// </summary>
-    public ProductRatingModel? Rating { get; set; }
+    public ProductRatingModel Rating { get; set; } = new ProductRatingModel();
 
 
     public ValidationResultDetail Validate()

@@ -45,9 +45,9 @@ public class CreateProductHandler : IRequestHandler<CreateProductCommand, Create
         {
             validationResult.Errors.Add(new FluentValidation.Results.ValidationFailure
             {
-                ErrorMessage = $"Product with title '{command.Title}' already exists"
+                ErrorMessage = $"Title '{command.Title}' already exists in another product"
             });
-            
+
             throw new ValidationException(validationResult.Errors);
         }
 

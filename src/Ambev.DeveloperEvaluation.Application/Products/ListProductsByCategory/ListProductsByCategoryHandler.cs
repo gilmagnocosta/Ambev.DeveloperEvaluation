@@ -5,6 +5,7 @@ using Ambev.DeveloperEvaluation.Domain.Repositories;
 using Ambev.DeveloperEvaluation.Application.Shared;
 using Ambev.DeveloperEvaluation.Domain.Entities;
 using Ambev.DeveloperEvaluation.Application.Products.GetProduct;
+using Ambev.DeveloperEvaluation.Application.Products.ListProducts;
 
 namespace Ambev.DeveloperEvaluation.Application.Products.ListProductsByCategory;
 
@@ -48,12 +49,16 @@ public class ListProductsByCategoryHandler : IRequestHandler<ListProductsByCateg
 
         var orderParams = !string.IsNullOrEmpty(request.Order) ? request.Order.Split(' ') : [STANDARD_COLUMN_ORDER, STANDARD_DIRECTION_ORDER];
 
-        var (items, count) = await _productRepository.GetAllByCategoryAsync(request.Category, request.Page, request.Size, orderParams[0], orderParams[1] == "asc" ? true : false, cancellationToken);
+        var (items, count) = await _productRepository.GetAllByCategoryAsync(
+            request.Category, 
+            request.Page, 
+            request.Size, 
+            orderParams[0], 
+            orderParams[1] == "asc" ? true : false, 
+            cancellationToken);
 
-        return new ListProductsByCategoryResult
-        {
-            Items = _mapper.Map<List<GetProductResult>>(items),
-            TotalItems = count
-        };
+        var result = new ListProductsByCategoryResult(_mapper.Map<List<GetProductResult>>(items), request.Page, request.Size, count);
+
+        return _mapper.Map<ListProductsByCategoryResult>(result);
     }
 }

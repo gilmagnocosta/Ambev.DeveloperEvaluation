@@ -90,11 +90,11 @@ public class ProductRepository : IProductRepository
     /// <param name="orderColumn">Order column</param>
     /// <param name="ascending">Order direction</param>
     /// <param name="cancellationToken">Calcellation token</param>
-    /// <returns></returns>
+    /// <returns>List of all products</returns>
     public async Task<(List<Product>?, int)> GetAllAsync(int page, int size, string orderColumn, bool ascending, CancellationToken cancellationToken = default)
     {
         var items = await _context.Products
-            .Skip(size * page)
+            .Skip(size * (page - 1))
             .Take(size)
             .ToListAsync(cancellationToken);
 
@@ -125,7 +125,8 @@ public class ProductRepository : IProductRepository
 
         items = items.OrderBy(orderColumn, ascending)?.ToList();
 
-        var itemsCount = items?.Count() ?? 0; // _context.Products.CountAsync(cancellationToken);
+        var itemsCount = await _context.Products
+            .Where(x => x.Category == category).CountAsync();
 
         return (items, itemsCount);
     }
@@ -137,7 +138,11 @@ public class ProductRepository : IProductRepository
     /// <returns>Array of all product categories</returns>
     public async Task<List<string>>? GetAllProductCategoriesAsync(CancellationToken cancellationToken = default)
     {
-        List<string> items = await _context.Products.Select(x => x.Category).Distinct().ToListAsync();
+        List<string> items = await _context.Products
+            .Select(x => x.Category)
+            .Distinct()
+            .Order()
+            .ToListAsync();
 
         return items;
     }
