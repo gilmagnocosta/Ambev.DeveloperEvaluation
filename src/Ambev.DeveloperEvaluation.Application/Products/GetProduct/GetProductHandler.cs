@@ -6,33 +6,33 @@ using Ambev.DeveloperEvaluation.Domain.Repositories;
 namespace Ambev.DeveloperEvaluation.Application.Products.GetProduct;
 
 /// <summary>
-/// Handler for processing GetUserCommand requests
+/// Handler for processing GetProductCommand requests
 /// </summary>
 public class GetProductHandler : IRequestHandler<GetProductQuery, GetProductResult>
 {
-    private readonly IProductRepository _userRepository;
+    private readonly IProductRepository _productRepository;
     private readonly IMapper _mapper;
 
     /// <summary>
-    /// Initializes a new instance of GetUserHandler
+    /// Initializes a new instance of GetProductHandler
     /// </summary>
-    /// <param name="userRepository">The user repository</param>
+    /// <param name="productRepository">The Product repository</param>
     /// <param name="mapper">The AutoMapper instance</param>
-    /// <param name="validator">The validator for GetUserCommand</param>
+    /// <param name="validator">The validator for GetProductCommand</param>
     public GetProductHandler(
-        IProductRepository userRepository,
+        IProductRepository productRepository,
         IMapper mapper)
     {
-        _userRepository = userRepository;
+        _productRepository = productRepository;
         _mapper = mapper;
     }
 
     /// <summary>
-    /// Handles the GetUserCommand request
+    /// Handles the GetProductCommand request
     /// </summary>
-    /// <param name="request">The GetUser command</param>
+    /// <param name="request">The GetProduct command</param>
     /// <param name="cancellationToken">Cancellation token</param>
-    /// <returns>The user details if found</returns>
+    /// <returns>The Product details if found</returns>
     public async Task<GetProductResult> Handle(GetProductQuery request, CancellationToken cancellationToken)
     {
         var validator = new GetProductValidator();
@@ -41,10 +41,10 @@ public class GetProductHandler : IRequestHandler<GetProductQuery, GetProductResu
         if (!validationResult.IsValid)
             throw new ValidationException(validationResult.Errors);
 
-        var user = await _userRepository.GetByIdAsync(request.Id, cancellationToken);
-        if (user == null)
-            throw new KeyNotFoundException($"User with ID {request.Id} not found");
+        var Product = await _productRepository.GetByIdAsync(request.Id, cancellationToken);
+        if (Product == null)
+            throw new KeyNotFoundException($"Product with ID {request.Id} not found");
 
-        return _mapper.Map<GetProductResult>(user);
+        return _mapper.Map<GetProductResult>(Product);
     }
 }

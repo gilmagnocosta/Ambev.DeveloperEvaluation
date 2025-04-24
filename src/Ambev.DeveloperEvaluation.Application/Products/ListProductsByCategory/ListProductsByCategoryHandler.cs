@@ -59,6 +59,6 @@ public class ListProductsByCategoryHandler : IRequestHandler<ListProductsByCateg
 
         var result = new ListProductsByCategoryResult(_mapper.Map<List<GetProductResult>>(items), request.Page, request.Size, count);
 
-        return _mapper.Map<ListProductsByCategoryResult>(result);
+        return result;
     }
 }

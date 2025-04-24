@@ -5,12 +5,14 @@ namespace Ambev.DeveloperEvaluation.Application.Products.GetProduct;
 /// <summary>
 /// Command for retrieving a product by their ID
 /// </summary>
-public record GetProductQuery : IRequest<GetProductResult>
+public class GetProductQuery : IRequest<GetProductResult>
 {
     /// <summary>
     /// The unique identifier of the product to retrieve
     /// </summary>
-    public Guid Id { get; }
+    public Guid Id { get; set; }
+
+    public GetProductQuery() { }
 
     /// <summary>
     /// Initializes a new instance of GetProductCommand

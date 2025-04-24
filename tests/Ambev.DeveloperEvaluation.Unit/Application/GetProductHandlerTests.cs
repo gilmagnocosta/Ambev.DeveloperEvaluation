@@ -1,4 +1,5 @@
 using Ambev.DeveloperEvaluation.Application.Products.EditProduct;
+using Ambev.DeveloperEvaluation.Application.Products.GetProduct;
 using Ambev.DeveloperEvaluation.Domain.Entities;
 using Ambev.DeveloperEvaluation.Domain.Repositories;
 using Ambev.DeveloperEvaluation.Unit.Domain;
@@ -10,13 +11,13 @@ using Xunit;
 namespace Ambev.DeveloperEvaluation.Unit.Application;
 
 /// <summary>
-/// Contains unit tests for the <see cref="EditProductHandler"/> class.
+/// Contains unit tests for the <see cref="GetProductHandler"/> class.
 /// </summary>
-public class EditProductHandlerTests
+public class GetProductHandlerTests
 {
     private readonly IProductRepository _productRepository;
     private readonly IMapper _mapper;
-    private readonly EditProductHandler _handler;
+    private readonly GetProductHandler _handler;
     private readonly List<Product> _products = new List<Product>
     {
         EditProductHandlerTestData.GenerateValidProduct(),
@@ -30,52 +31,55 @@ public class EditProductHandlerTests
     /// Initializes a new instance of the <see cref="EditProductHandlerTests"/> class.
     /// Sets up the test dependencies and Edits fake data generators.
     /// </summary>
-    public EditProductHandlerTests()
+    public GetProductHandlerTests()
     {
         _productRepository = Substitute.For<IProductRepository>();
         _mapper = Substitute.For<IMapper>();
-        _handler = new EditProductHandler(_productRepository, _mapper);
+        _handler = new GetProductHandler(_productRepository, _mapper);
     }
 
     /// <summary>
     /// Tests that a valid Product update request is handled successfully.
     /// </summary>
-    [Fact(DisplayName = "Given valid Product data When update Product Then returns success response")]
+    [Fact(DisplayName = "Given valid Product data When query Product By Id Then returns success response")]
     public async Task Handle_ValidRequest_ReturnsSuccessResponse()
     {
         // Given
-        var command = EditProductHandlerTestData.GenerateValidCommand();
+        var command = GetProductHandlerTestData.GenerateValidQuery();
         var product = _products.First();
-        command.Id = product.Id;
 
-        var result = new EditProductResult
+        var result = new GetProductResult
         {
             Id = product.Id,
+            Category = product.Category,
+            Description = product.Description,
+            Image = product.Image,
+            Title = product.Title
         };
 
         _mapper.Map<Product>(command).Returns(product);
-        _mapper.Map<EditProductResult>(product).Returns(result);
+        _mapper.Map<GetProductResult>(product).Returns(result);
 
         _productRepository.GetByIdAsync(Arg.Any<Guid>(), Arg.Any<CancellationToken>())
             .Returns(product);
 
         // When
-        var editProductResult = await _handler.Handle(command, CancellationToken.None);
+        var getProductResult = await _handler.Handle(command, CancellationToken.None);
 
         // Then
-        editProductResult.Should().NotBeNull();
-        editProductResult.Id.Should().Be(product.Id);
-        await _productRepository.Received(1).UpdateAsync(Arg.Any<Product>(), Arg.Any<CancellationToken>());
+        getProductResult.Should().NotBeNull();
+        getProductResult.Id.Should().Be(product.Id);
+        await _productRepository.Received(1).GetByIdAsync(Arg.Any<Guid>(), Arg.Any<CancellationToken>());
     }
 
     /// <summary>
-    /// Tests that an invalid Product update request throws a validation exception.
+    /// Tests that an invalid Product Id request throws a validation exception.
     /// </summary>
-    [Fact(DisplayName = "Given invalid Product data When creating Product Then throws validation exception")]
+    [Fact(DisplayName = "Given invalid Product Id When get Product By Id Then throws validation exception")]
     public async Task Handle_InvalidRequest_ThrowsValidationException()
     {
         // Given
-        var command = new EditProductCommand(); // Empty command will fail validation
+        var command = new GetProductQuery(Guid.Empty); // Empty command will fail validation
 
         // When
         var act = () => _handler.Handle(command, CancellationToken.None);
@@ -87,40 +91,36 @@ public class EditProductHandlerTests
     /// <summary>
     /// Tests that the mapper is called with the correct command.
     /// </summary>
-    [Fact(DisplayName = "Given valid command When handling Then maps command to Product entity")]
-    public async Task Handle_ValidRequest_MapsCommandToUser()
+    [Fact(DisplayName = "Given valid query When handling Then maps query to Product entity")]
+    public async Task Handle_ValidRequest_MapsCommandToProduct()
     {
         // Given
-        var command = EditProductHandlerTestData.GenerateValidCommand();
+        var query = GetProductHandlerTestData.GenerateValidQuery();
         var product = _products.First();
-        command.Id = product.Id;
 
-        var result = new EditProductResult
+        var result = new GetProductResult
         {
-            Id = command.Id,
-            Category = command.Category,
-            Description = command.Description,
-            Image = command.Image,
-            Title = command.Title
+            Id = query.Id,
+            Category = product.Category,
+            Description = product.Description,
+            Image = product.Image,
+            Title = product.Title
         };
 
-        _mapper.Map<Product>(command).Returns(product);
-        _mapper.Map<EditProductResult>(product).Returns(result);
+        _mapper.Map<Product>(query).Returns(product);
+        _mapper.Map<GetProductResult>(product).Returns(result);
 
         _productRepository.GetByIdAsync(Arg.Any<Guid>(), Arg.Any<CancellationToken>())
             .Returns(product);
 
-        _productRepository.UpdateAsync(Arg.Any<Product>(), Arg.Any<CancellationToken>())
-            .Returns(product);
-
         // When
-        await _handler.Handle(command, CancellationToken.None);
+        await _handler.Handle(query, CancellationToken.None);
 
         // Then
-        _mapper.Received(1).Map<EditProductResult>(Arg.Is<Product>(c =>
-            c.Title == command.Title &&
-            c.Description == command.Description &&
-            c.Category == command.Category &&
-            c.Image == command.Image));
+        _mapper.Received(1).Map<GetProductResult>(Arg.Is<Product>(c =>
+            c.Title == product.Title &&
+            c.Description == product.Description &&
+            c.Category == product.Category &&
+            c.Image == product.Image));
     }
 }
