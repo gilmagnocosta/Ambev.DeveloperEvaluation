@@ -1,0 +1,22 @@
+using Ambev.DeveloperEvaluation.Application.Carts.EditCart;
+using Ambev.DeveloperEvaluation.Application.Carts.GetCart;
+using Ambev.DeveloperEvaluation.WebApi.Features.Carts.EditCart;
+using Ambev.DeveloperEvaluation.WebApi.Features.Carts.GetCart;
+using AutoMapper;
+
+namespace Ambev.DeveloperEvaluation.WebApi.Features.Users.GetCart;
+
+/// <summary>
+/// Profile for mapping GetCart feature requests to commands
+/// </summary>
+public class GetCartProfile : Profile
+{
+    /// <summary>
+    /// Initializes the mappings for GetCart feature
+    /// </summary>
+    public GetCartProfile()
+    {
+        CreateMap<GetCartRequest, GetCartQuery>();
+        CreateMap<GetCartResult, GetCartResponse>();
+    }
+}
