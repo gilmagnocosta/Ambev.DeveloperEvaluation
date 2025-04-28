@@ -1,5 +1,3 @@
-using Ambev.DeveloperEvaluation.Application.Products.Shared.Models;
-
 namespace Ambev.DeveloperEvaluation.WebApi.Features.Products.ListProductCategories;
 
 /// <summary>

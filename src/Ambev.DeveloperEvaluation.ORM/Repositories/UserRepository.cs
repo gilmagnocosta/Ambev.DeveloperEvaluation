@@ -1,6 +1,7 @@
 ﻿using Ambev.DeveloperEvaluation.Domain.Entities;
 using Ambev.DeveloperEvaluation.Domain.Repositories;
 using Microsoft.EntityFrameworkCore;
+using Ambev.DeveloperEvaluation.ORM.Helpers;
 
 namespace Ambev.DeveloperEvaluation.ORM.Repositories;
 
@@ -34,6 +35,19 @@ public class UserRepository : IUserRepository
     }
 
     /// <summary>
+    /// Update a user in the database
+    /// </summary>
+    /// <param name="user">The product to update</param>
+    /// <param name="cancellationToken">Cancellation token</param>
+    /// <returns>The updated product</returns>
+    public async Task<User> UpdateAsync(User user, CancellationToken cancellationToken = default)
+    {
+        _context.Users.Update(user);
+        await _context.SaveChangesAsync(cancellationToken);
+        return user;
+    }
+
+    /// <summary>
     /// Retrieves a user by their unique identifier
     /// </summary>
     /// <param name="id">The unique identifier of the user</param>
@@ -54,6 +68,29 @@ public class UserRepository : IUserRepository
     {
         return await _context.Users
             .FirstOrDefaultAsync(u => u.Email == email, cancellationToken);
+    }
+
+    /// <summary>
+    /// Retrieves all users
+    /// </summary>
+    /// <param name="page">Page</param>
+    /// <param name="size">Page size</param>
+    /// <param name="orderColumn">Order column</param>
+    /// <param name="ascending">Order direction</param>
+    /// <param name="cancellationToken">Calcellation token</param>
+    /// <returns>List of all users</returns>
+    public async Task<(List<User>?, int)> GetAllAsync(int page, int size, string orderColumn, bool ascending, CancellationToken cancellationToken = default)
+    {
+        var items = await _context.Users
+            .Skip(size * (page - 1))
+            .Take(size)
+            .ToListAsync(cancellationToken);
+
+        items = items.OrderBy(orderColumn, ascending)?.ToList();
+
+        var itemsCount = await _context.Users.CountAsync(cancellationToken);
+
+        return (items, itemsCount);
     }
 
     /// <summary>

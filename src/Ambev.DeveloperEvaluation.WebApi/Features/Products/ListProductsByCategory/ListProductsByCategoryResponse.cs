@@ -1,4 +1,3 @@
-using Ambev.DeveloperEvaluation.Application.Products.Shared.Models;
 using Ambev.DeveloperEvaluation.WebApi.Features.Products.GetProduct;
 using Ambev.DeveloperEvaluation.WebApi.Features.Shared.Base;
 

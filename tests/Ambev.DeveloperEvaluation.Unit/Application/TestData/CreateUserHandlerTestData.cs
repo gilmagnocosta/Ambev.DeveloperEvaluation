@@ -22,6 +22,19 @@ public static class CreateUserHandlerTestData
     /// - Role (Customer or Admin)
     /// </summary>
     private static readonly Faker<CreateUserCommand> createUserHandlerFaker = new Faker<CreateUserCommand>()
+        .RuleFor(u => u.Name, f => new DeveloperEvaluation.Application.Users.Shared.Models.NameModel() { Firstname = f.Person.FirstName, Lastname = f.Person.LastName })
+        .RuleFor(u => u.Address, f => new DeveloperEvaluation.Application.Users.Shared.Models.AddressModel()
+        {
+            City = f.Address.City(),
+            Street = f.Address.StreetName(),
+            ZipCode = f.Address.ZipCode(),
+            Number = f.Address.BuildingNumber(),
+            Geolocation = new DeveloperEvaluation.Application.Users.Shared.Models.GeolocationModel
+            {
+                Lat = f.Address.Latitude().ToString(),
+                Long = f.Address.Longitude().ToString()
+            }
+        })
         .RuleFor(u => u.Username, f => f.Internet.UserName())
         .RuleFor(u => u.Password, f => $"Test@{f.Random.Number(100, 999)}")
         .RuleFor(u => u.Email, f => f.Internet.Email())

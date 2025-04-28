@@ -1,5 +1,4 @@
 using Ambev.DeveloperEvaluation.Application.Products.Shared.Models;
-using Ambev.DeveloperEvaluation.Domain.Enums;
 
 namespace Ambev.DeveloperEvaluation.WebApi.Features.Products.GetProduct;
 

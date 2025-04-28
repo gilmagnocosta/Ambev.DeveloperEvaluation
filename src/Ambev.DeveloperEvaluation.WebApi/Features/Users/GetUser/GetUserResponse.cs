@@ -1,4 +1,5 @@
 using Ambev.DeveloperEvaluation.Domain.Enums;
+using Ambev.DeveloperEvaluation.WebApi.Features.Users.Shared.Models;
 
 namespace Ambev.DeveloperEvaluation.WebApi.Features.Users.GetUser;
 
@@ -15,7 +16,9 @@ public class GetUserResponse
     /// <summary>
     /// The user's full name
     /// </summary>
-    public string Name { get; set; } = string.Empty;
+    public NameModel Name { get; set; }
+
+    public AddressModel Address { get; set; }
 
     /// <summary>
     /// The user's email address

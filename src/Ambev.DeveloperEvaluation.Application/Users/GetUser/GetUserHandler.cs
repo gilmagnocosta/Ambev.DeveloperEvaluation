@@ -10,7 +10,7 @@ namespace Ambev.DeveloperEvaluation.Application.Users.GetUser;
 /// </summary>
 public class GetUserHandler : IRequestHandler<GetUserCommand, GetUserResult>
 {
-    private readonly IProductRepository _userRepository;
+    private readonly IUserRepository _userRepository;
     private readonly IMapper _mapper;
 
     /// <summary>
@@ -20,7 +20,7 @@ public class GetUserHandler : IRequestHandler<GetUserCommand, GetUserResult>
     /// <param name="mapper">The AutoMapper instance</param>
     /// <param name="validator">The validator for GetUserCommand</param>
     public GetUserHandler(
-        IProductRepository userRepository,
+        IUserRepository userRepository,
         IMapper mapper)
     {
         _userRepository = userRepository;

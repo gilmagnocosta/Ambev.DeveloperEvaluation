@@ -25,7 +25,7 @@ public static class EditProductHandlerTestData
         .RuleFor(u => u.Category, f => f.Random.AlphaNumeric(20))
         .RuleFor(u => u.Image, f => f.Random.AlphaNumeric(100));
 
-    private static readonly Faker<Product> ProductFaker = new Faker<Product>()
+    private static readonly Faker<Product> productFaker = new Faker<Product>()
         .RuleFor(u => u.Id, f => Guid.NewGuid())
         .RuleFor(u => u.Title, f => f.Name.Random.AlphaNumeric(50))
         .RuleFor(u => u.Description, f => f.Random.AlphaNumeric(200))
@@ -51,6 +51,6 @@ public static class EditProductHandlerTestData
     /// <returns>A valid Product entity with randomly generated data.</returns>
     public static Product GenerateValidProduct()
     {
-        return ProductFaker.Generate();
+        return productFaker.Generate();
     }
 }

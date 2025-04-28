@@ -7,9 +7,6 @@ namespace Ambev.DeveloperEvaluation.WebApi.Features.Products.EditProduct;
 /// </summary>
 public class EditProductRequest
 {
-    /// <summary>
-    /// Gets or sets the title of the product to be updated
-    /// </summary>
     public Guid Id { get; set; }
 
     /// <summary>

@@ -60,7 +60,7 @@ public class ProductsController : BaseController
         var command = _mapper.Map<CreateProductCommand>(request);
         var response = await _mediator.Send(command, cancellationToken);
 
-        return SimpleOk(_mapper.Map<CreateProductResponse>(response));
+        return Created(string.Empty, _mapper.Map<CreateProductResponse>(response));
     }
 
     /// <summary>
@@ -70,7 +70,7 @@ public class ProductsController : BaseController
     /// <param name="cancellationToken">Cancellation token</param>
     /// <returns>The updated Product details</returns>
     [HttpPut("{id}")]
-    [ProducesResponseType(typeof(ApiResponseWithData<EditProductResponse>), StatusCodes.Status201Created)]
+    [ProducesResponseType(typeof(EditProductResponse), StatusCodes.Status201Created)]
     [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> UpdateProduct([FromRoute] Guid id, [FromBody] EditProductRequest request, CancellationToken cancellationToken)
     {
@@ -86,7 +86,7 @@ public class ProductsController : BaseController
         var command = _mapper.Map<EditProductCommand>(request);
         var response = await _mediator.Send(command, cancellationToken);
 
-        return SimpleOk(_mapper.Map<EditProductResponse>(response));
+        return Ok(_mapper.Map<EditProductResponse>(response));
     }
 
     /// <summary>
@@ -111,7 +111,7 @@ public class ProductsController : BaseController
         var command = _mapper.Map<GetProductQuery>(request.Id);
         var response = await _mediator.Send(command, cancellationToken);
 
-        return SimpleOk(_mapper.Map<GetProductResponse>(response));
+        return Ok(_mapper.Map<GetProductResponse>(response));
     }
 
     /// <summary>
@@ -134,7 +134,7 @@ public class ProductsController : BaseController
 
         var command = _mapper.Map<ListProductCategoriesQuery>(request);
         var response = await _mediator.Send(command, cancellationToken);
-        return SimpleOk(response);
+        return Ok(response);
     }
 
     /// <summary>
@@ -158,7 +158,7 @@ public class ProductsController : BaseController
         var command = _mapper.Map<ListProductsQuery>(request);
         var response = await _mediator.Send(command, cancellationToken);
 
-        return SimpleOk(_mapper.Map<ListProductsResponse>(response));
+        return Ok(_mapper.Map<ListProductsResponse>(response));
     }
 
     /// <summary>
@@ -182,7 +182,7 @@ public class ProductsController : BaseController
         var command = _mapper.Map<ListProductsByCategoryQuery>(request);
         var response = await _mediator.Send(command, cancellationToken);
 
-        return SimpleOk(_mapper.Map<ListProductsByCategoryResponse>(response));
+        return Ok(_mapper.Map<ListProductsByCategoryResponse>(response));
 
         //return OkPaginated(new PaginatedList<GetProductResponse>(
         //    _mapper.Map<List<GetProductResponse>>(response.Items),
@@ -214,6 +214,6 @@ public class ProductsController : BaseController
         var command = _mapper.Map<DeleteProductCommand>(request.Id);
         await _mediator.Send(command, cancellationToken);
 
-        return SimpleOk("Product deleted successfully");
+        return Ok("Product deleted successfully");
     }
 }

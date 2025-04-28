@@ -1,4 +1,5 @@
-﻿using Ambev.DeveloperEvaluation.Common.Validation;
+﻿using Ambev.DeveloperEvaluation.Application.Users.Shared.Models;
+using Ambev.DeveloperEvaluation.Common.Validation;
 using Ambev.DeveloperEvaluation.Domain.Enums;
 using MediatR;
 
@@ -39,6 +40,9 @@ public class CreateUserCommand : IRequest<CreateUserResult>
     /// Gets or sets the email address for the user.
     /// </summary>
     public string Email { get; set; } = string.Empty;
+
+    public NameModel Name { get; set; }
+    public AddressModel Address { get; set; }
 
     /// <summary>
     /// Gets or sets the status of the user.
